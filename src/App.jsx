@@ -10,7 +10,7 @@ import './App.css';
 import { PokeTable, PokeSearch, PokeInfo } from './Pokemon';
 import styled from '@emotion/styled';
 
-function App() {
+function AppContent() {
   // States
   const [filter, filterSet] = useState(""); // Pokemon Search filter
   const [selectedItem, selectItem] = useState(null);  // Pokemon selection
@@ -69,6 +69,12 @@ function App() {
         </div>
       </TableContainer>
     </AppContainer>
+  )
+}
+
+function App() {
+  return (
+    <AppContent />
   )
 }
 
