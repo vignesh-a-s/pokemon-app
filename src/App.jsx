@@ -27,6 +27,14 @@ function AppContent() {
       .then((data) => pokemonSet(data));
   }, []);
 
+  // Focuses pokemon search bar upon value change
+  useEffect(() => {
+    let pokeSearchInput = document.querySelector('input[id="pokeSearchBar"]');
+    pokeSearchInput.focus({
+      preventScroll: true
+    });
+  }, [pokemon, filter, selectedItem]);
+
   // CSS in JS styles (powered by Emotion)
   const Title = styled.h1`
     font-size: 3.2em;

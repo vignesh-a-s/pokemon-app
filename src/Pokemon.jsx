@@ -131,8 +131,7 @@ export const PokeTable = ({pokemon, numEntries=-1, filter, selectItem}) => {
  */
 export const PokeSearch = ({filter, filterSet}) => {
   return (
-    <input type="text" className="pokeSearch"
-      autoFocus="autoFocus" placeholder='Search Pokemon...' 
+    <input type="text" className="pokeSearch" id="pokeSearchBar" placeholder='Search Pokemon...' 
       value={filter} onChange={(evt) => filterSet(evt.target.value)} />
   );
 };
