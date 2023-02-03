@@ -35,6 +35,9 @@ function AppContent() {
     });
   }, [pokemon, filter, selectedItem]);
 
+  const CONTAINER_WIDTH = 1000;
+  const TABLE_WIDTH_PERCENT = 70;
+
   // CSS in JS styles (powered by Emotion)
   const Title = styled.h1`
     font-size: 3.2em;
@@ -44,19 +47,31 @@ function AppContent() {
 
   const AppContainer = styled.div`
     margin: auto;
-    width: 800px;
+    max-width: ${CONTAINER_WIDTH}px;
     padding-top: 1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
   `;
 
   const TableContainer = styled.div`
     display: grid;
-    grid-template-columns: 70% 30%;
+    grid-template-columns: ${TABLE_WIDTH_PERCENT}% ${100 - TABLE_WIDTH_PERCENT}%;
     column-gap: 1rem;
+
+    @media only screen and (max-width: 800px) {
+      grid-template-columns: 100% 0%;
+      column-gap: 0rem;
+    }
   `;
 
   const InfoContainer = styled.div`
     position: fixed;
-    width: 30%;
+    width: ${100 - TABLE_WIDTH_PERCENT}%;
+    max-width: ${CONTAINER_WIDTH * 0.3}px;
+
+    @media only screen and (max-width: 800px) {
+      visibility: hidden
+    }
   `;
 
   // Returned App
