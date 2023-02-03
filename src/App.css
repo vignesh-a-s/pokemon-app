@@ -1,0 +1,31 @@
+table {
+  border-collapse: collapse;
+  margin-bottom: 12px;
+}
+
+th, td {
+  border: 1px solid #dddada;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: darkgray;
+}
+
+tr:nth-child(odd) {
+  background-color: whitesmoke;
+}
+
+tbody tr:hover {
+  background-color: #7a7878;
+  color: white;
+}
+
+th {
+  text-align: left;
+  font-size: x-large;
+  background-color: #6495ed;
+  color: white;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
