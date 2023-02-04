@@ -1,11 +1,12 @@
 // import pokemon from './pokemon.json'
 import './pokemon.css'
 import PropTypes from 'prop-types'
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import styled from '@emotion/styled';
 
 /**
  * React Component - provides Pokemon Type
  * @param {*}
- * @param {*} 
  * @returns {*}
  */
 const PokeType = ({types, pokeId}) => {
@@ -37,17 +38,24 @@ PokeType.propTypes = {
 
 /**
  * React Component - provides Pokemon Row
- * @param {*} pokemon 
- * @param {*} onSelect 
+ * @param {*}
  * @returns {*}
  */
-const PokeRow = ({pokemon, onSelect}) => (
-    <tr onClick={() => {onSelect(pokemon)}}>
+const PokeRow = ({pokemon, onSelect, toggle, screenSize}) => {
+  return (
+    <tr onClick={() => {
+        onSelect(pokemon);
+        // Toggles modal only for smaller screen sizes
+        if (screenSize < 800) {
+          toggle();
+        }
+      }}>
       <td>{pokemon.name.english}</td>
       <td><PokeType types={pokemon.type} pokeId={pokemon.id} key={['pokeTypeRow', pokemon.id].join(':')} /></td>
     </tr>
-);
-
+  )
+};
+  
 // Prop Types for PokeRow
 PokeRow.propTypes = {
   pokemon: PropTypes.shape({
@@ -58,18 +66,17 @@ PokeRow.propTypes = {
     type: PropTypes.arrayOf(PropTypes.string)
   }),
   onSelect: PropTypes.func,
+  toggle: PropTypes.func,
+  screenSize: PropTypes.number,
 };
 
 
 /**
  * React Component - loads Pokemon Data
  * @param {*}
- * @param {*}
- * @param {*}
- * @param {*}
  * @returns {*}
  */
-const PokeData = ({pokemon, numEntries=-1, filter, selectItem}) => {
+const PokeData = ({pokemon, numEntries=-1, filter, selectItem, toggle, screenSize}) => {
   let pokemonTypes = []; // Unique pokemon types
 
   if (numEntries <= -1) {
@@ -91,7 +98,7 @@ const PokeData = ({pokemon, numEntries=-1, filter, selectItem}) => {
     
     // Returns the table row containing the pokemon name and types
     return <PokeRow pokemon={poke} key={['pokeRow', poke.id].join(':')} 
-      onSelect={(pokemon) => selectItem(pokemon)} />
+      onSelect={(pokemon) => selectItem(pokemon)} toggle={toggle} screenSize={screenSize} />
   });
 
   // Returns the pokemon data
@@ -101,12 +108,9 @@ const PokeData = ({pokemon, numEntries=-1, filter, selectItem}) => {
 /**
  * React Component - builds Pokemon Table
  * @param {*}
- * @param {*}
- * @param {*}
- * @param {*}
  * @returns {*}
  */
-export const PokeTable = ({pokemon, numEntries=-1, filter, selectItem}) => {
+export const PokeTable = ({pokemon, numEntries=-1, filter, selectItem, toggle, screenSize}) => {
   return (
     <table width="100%">
       <thead>
@@ -116,7 +120,8 @@ export const PokeTable = ({pokemon, numEntries=-1, filter, selectItem}) => {
         </tr>
       </thead>
       <tbody>
-        <PokeData pokemon={pokemon} numEntries={numEntries} filter={filter} selectItem={selectItem} />
+        <PokeData pokemon={pokemon} numEntries={numEntries} filter={filter} selectItem={selectItem} 
+          toggle={toggle} screenSize={screenSize}/>
       </tbody>
       <tfoot></tfoot>
     </table>
@@ -125,8 +130,7 @@ export const PokeTable = ({pokemon, numEntries=-1, filter, selectItem}) => {
 
 /**
  * React Component - provides Pokemon Search filter
- * @param {*} 
- * @param {*} 
+ * @param {*}
  * @returns 
  */
 export const PokeSearch = ({filter, filterSet}) => {
@@ -138,7 +142,7 @@ export const PokeSearch = ({filter, filterSet}) => {
 
 /**
  * React Component - displays Pokemon Info
- * @param {*} 
+ * @param {*}
  * @returns 
  */
 export const PokeInfo = ({id, name, base}) => (
@@ -180,3 +184,36 @@ PokeInfo.propTypes = {
     Speed: PropTypes.number.isRequired,
   }),
 }
+
+/**
+ * React Component - Provides Modal dialog
+ * @param {*}
+ * @return {*}
+ */
+export const PokeInfoModal = ({modal, toggle, id, name, base}) => {
+  const ModalContainer = styled.div`
+    margin: auto;
+    display: block;
+    max-width: 500px;
+    padding: 0.3rem;
+  `;
+
+  return (
+    <ModalContainer>
+      <Modal isOpen={modal} toggle={toggle}>
+        <ModalHeader toggle={toggle}>Base Stats</ModalHeader>
+        <ModalBody>
+          <PokeInfo id={id} name={name} base={base} />
+        </ModalBody>
+        <ModalFooter>
+          <Button color="secondary" onClick={toggle}>Cancel</Button>
+        </ModalFooter>
+      </Modal>
+    </ModalContainer>
+  );
+}
+
+PokeInfoModal.propTypes = {
+  modal: PropTypes.bool,
+  toggle: PropTypes.func,
+};

@@ -7,7 +7,7 @@
 
 import { useState, useEffect } from 'react';
 import './App.css';
-import { PokeTable, PokeSearch, PokeInfo } from './Pokemon';
+import { PokeInfoModal, PokeTable, PokeSearch, PokeInfo } from './Pokemon';
 import styled from '@emotion/styled';
 
 function AppContent() {
@@ -15,6 +15,25 @@ function AppContent() {
   const [filter, filterSet] = useState(""); // Pokemon Search filter
   const [selectedItem, selectItem] = useState(null);  // Pokemon selection
   const [pokemon, pokemonSet] = useState([]); // Pokemon data
+  const [modal, setModal] = useState(false);  // Modal
+  const [screenSize, setScreenSize] = useState(window.innerWidth);  // Screen Size
+
+  const toggle = () => setModal(!modal);  // HOF to Toggle Modal
+  
+  // Stores screen size on window resizing
+  useEffect(() => {
+    // Handles window resize
+    function handleResize() {
+      setScreenSize(window.innerWidth);
+    }
+
+    // Sets resize event listener to handle resize
+    window.addEventListener('resize', handleResize);
+    handleResize();
+
+    // Removes event listener on cleanup
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Loads pokemon JSON data from public URL
   useEffect(() => {
@@ -43,6 +62,7 @@ function AppContent() {
     font-size: 3.2em;
     line-height: 1.1;
     text-align: center;
+    font-family: Impact, Haettenschweiler, 'Arial', sans-serif;
   `;
 
   const AppContainer = styled.div`
@@ -77,11 +97,15 @@ function AppContent() {
   // Returned App
   return (
     <AppContainer>
-      <Title>Pokemon Search</Title>
+      <Title>Pokemania</Title>
       <TableContainer>
         <div>
           <PokeSearch filter={filter} filterSet={filterSet} />
-          <PokeTable pokemon={pokemon} numEntries={-1} filter={filter} selectItem={selectItem} />
+          <PokeTable pokemon={pokemon} numEntries={-1} filter={filter} selectItem={selectItem} 
+            toggle={toggle} screenSize={screenSize} />
+          {selectedItem && (
+            <PokeInfoModal modal={modal} toggle={toggle} {...selectedItem} />
+          )}
         </div>
         <div>
           {selectedItem && (
